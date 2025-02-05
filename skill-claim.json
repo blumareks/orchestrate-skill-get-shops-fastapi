@@ -1,138 +1,130 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "Insurance Claim Skill",
-      "version": "1.0.0",
-      "description": "API for querying and submitting insurance claims."
-    },
-    "paths": {
-      "/query": {
-        "post": {
-          "summary": "Retrieve insurance claim details",
-          "operationId": "getInsuranceClaimDetails",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/QueryRequest"
-                }
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Get Repair Shops API",
+    "description": "This API retrieves the five closest repair shops associated with the insurance provider for a given claim number and ZIP code.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-api-server.com",
+      "description": "Production Server"
+    }
+  ],
+  "paths": {
+    "/get-repair-shops": {
+      "post": {
+        "summary": "Retrieve repair shops for a claim",
+        "operationId": "getRepairShops",
+        "security": [
+          { "ApiKeyAuth": [] }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetRepairShopsRequest"
               }
-            }
-          },
-          "responses": {
-            "200": {
-              "description": "Insurance claim details retrieved successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/InsuranceClaimResponse"
-                  }
-                }
-              }
-            },
-            "400": {
-              "description": "Invalid request"
             }
           }
-        }
-      },
-      "/submit-claim": {
-        "post": {
-          "summary": "Submit an insurance claim",
-          "operationId": "submitInsuranceClaim",
-          "requestBody": {
-            "required": true,
+        },
+        "responses": {
+          "200": {
+            "description": "List of repair shops retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ClaimRequest"
+                  "$ref": "#/components/schemas/GetRepairShopsResponse"
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Claim submitted successfully",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/RepairShopList"
-                  }
-                }
-              }
-            }
+          "400": {
+            "description": "Invalid request format"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid API Key"
+          },
+          "404": {
+            "description": "No repair shops found"
           }
         }
       }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key",
+        "description": "API Key required for authentication. Include in request headers as `x-api-key: YOUR_API_KEY`"
+      }
     },
-    "components": {
-      "schemas": {
-        "QueryRequest": {
-          "type": "object",
-          "properties": {
-            "RAG": {
-              "type": "string",
-              "example": "insurance claim"
-            }
+    "schemas": {
+      "GetRepairShopsRequest": {
+        "type": "object",
+        "properties": {
+          "claimNo": {
+            "type": "string",
+            "example": "20250203testclaim01",
+            "description": "Unique claim number assigned upon claim submission."
           },
-          "required": ["RAG"]
-        },
-        "InsuranceClaimResponse": {
-          "type": "object",
-          "properties": {
-            "Name": { "type": "string" },
-            "PolicyNumber": { "type": "string" },
-            "Vehicle Make and Model": { "type": "string" },
-            "Vehicle Year": { "type": "string" },
-            "License Plate Number": { "type": "string" },
-            "Date of Incident": { "type": "string" },
-            "Time of Incident": { "type": "string" },
-            "Location of Incident": { "type": "string" },
-            "Weather Conditions": { "type": "string" },
-            "Cause of Damage": { "type": "string" },
-            "Extent of Damage": { "type": "string" },
-            "Driver's License Number": { "type": "string" },
-            "State of Driver's License": { "type": "string" },
-            "Insurance Company": { "type": "string" },
-            "Contact Information": { "type": "string" },
-            "Email Address": { "type": "string" },
-            "Incident Description": { "type": "string" },
-            "Police Report Filed": { "type": "string" },
-            "Photos of Damage": { "type": "string" },
-            "Repair or Replacement Needed": { "type": "string" },
-            "Preferred Repair Shop": { "type": "string" },
-            "Deductible Amount": { "type": "string" },
-            "Witnesses": { "type": "string" },
-            "Other Parties Involved": { "type": "string" }
+          "zip": {
+            "type": "string",
+            "example": "94100",
+            "description": "ZIP code used to find the nearest repair shops."
           }
         },
-        "ClaimRequest": {
-          "type": "object",
-          "allOf": [
-            { "$ref": "#/components/schemas/InsuranceClaimResponse" }
-          ]
-        },
-        "RepairShop": {
-          "type": "object",
-          "properties": {
-            "Name": { "type": "string" },
-            "Address": { "type": "string" },
-            "Phone": { "type": "string" },
-            "Email": { "type": "string" }
-          }
-        },
-        "RepairShopList": {
-          "type": "object",
-          "properties": {
-            "message": { "type": "string", "example": "Claim submitted successfully" },
-            "recommended_repair_shops": {
-              "type": "array",
-              "items": { "$ref": "#/components/schemas/RepairShop" }
+        "required": ["claimNo", "zip"]
+      },
+      "GetRepairShopsResponse": {
+        "type": "object",
+        "properties": {
+          "claimNo": {
+            "type": "string",
+            "example": "20250203testclaim01",
+            "description": "Claim number for which repair shops were retrieved."
+          },
+          "zip": {
+            "type": "string",
+            "example": "94100",
+            "description": "ZIP code where the search was performed."
+          },
+          "repairShops": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "example": "Speedy Auto Glass",
+                  "description": "Name of the repair shop."
+                },
+                "address": {
+                  "type": "string",
+                  "example": "123 Glass Street, Pleasant Hill, CA",
+                  "description": "Physical location of the repair shop."
+                },
+                "phone": {
+                  "type": "string",
+                  "example": "555-987-6543",
+                  "description": "Contact number of the repair shop."
+                },
+                "distance": {
+                  "type": "string",
+                  "example": "2.5 miles",
+                  "description": "Distance from the provided ZIP code."
+                }
+              }
             }
           }
         }
       }
     }
-  }
-  
+  },
+  "security": [
+    { "ApiKeyAuth": [] }
+  ]
+}
