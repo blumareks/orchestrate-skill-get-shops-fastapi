@@ -9,11 +9,36 @@ class RepairRequest(BaseModel):
 
 # Mocked list of repair shops
 repair_shops_db = [
-    {"name": "Speedy Auto Glass", "address": "123 Glass St, Pleasant Hill, CA","phone":"925-100-1234"},
-    {"name": "Elite Windshield Repair", "address": "456 Auto Blvd, Oakland, CA","phone":"925-100-1000"},
-    {"name": "Bay Area Glass Pros", "address": "789 Car Dr, San Francisco, CA","phone":"415-100-1000"},
-    {"name": "Quick Fix Auto Glass", "address": "101 Fast Ln, San Mateo, CA","phone":"510-100-1000"},
-    {"name": "Precision Windshield Experts", "address": "202 Car St, Berkeley, CA","phone":"925-100-1000"},
+    {
+    "name": "Anytime Auto Glass",
+    "address": "1560 River St, Boston, MA 02136",
+    "phone": "617-898-8463"
+  },
+  {
+    "name": "Safelite AutoGlass",
+    "address": "1783 Revere Beach Pkwy, Everett, MA 02149",
+    "phone": "800-800-2727"
+  },
+  {
+    "name": "Local Auto Glass",
+    "address": "133 S Walnut St, Quincy, MA 02169",
+    "phone": "617-479-1114"
+  },
+{
+    "name": "Allstate Auto Glass",
+    "address": "519 E 5th Street, Boston, MA 02127",
+    "phone": "617-770-3344"
+  },
+  {
+    "name": "Auto Glass Now",
+    "address": "139 Freeport St, Boston, MA 02122",
+    "phone": "843-900-7216"
+  },
+  {
+    "name": "AutoGlass All Boston",
+    "address": "Boston, MA",
+    "phone": "857-293-9155"
+  }
 ]
 
 @app.post("/get-repair-shops")
